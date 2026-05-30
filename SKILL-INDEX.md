@@ -784,9 +784,45 @@ Open-source personal AI super-intelligence harness — local memory, managed ser
 
 ---
 
+## Game Development
+
+Complete game development pipeline — from brainstorming to release.
+
+### Claude-Code-Game-Studios (73 skills, 49 agents)
+- What: Full game studio hierarchy — directors, leads, specialists for Godot/Unity/UE5
+- When: Building any game; need structured workflow (brainstorm → design → architecture → sprint → QA → release)
+- Key skills: /start, /brainstorm, /create-architecture, /sprint-plan, /prototype, /vertical-slice, /playtest-report, /release-checklist
+- Path: D:\agent-resources\skills\game-studios\
+
+### Godogen (autonomous game generation)
+- What: Autonomous game generation pipeline with screenshot-based self-repair
+- When: Want AI to generate a complete game from a description (Godot 4 / Bevy / Babylon.js)
+- Key feature: Frame-grounded self-repair — judges progress from screenshots, not just compilation
+- Path: D:\agent-resources\skills\godogen\
+
+### GSD-2 (spec-driven development, 58.9k stars)
+- What: Meta-prompting system that prevents context rot; breaks work into atomic plans
+- When: Any complex project where "just prompting" produces bad results; need spec → plan → task → implement flow
+- Note: Full runtime (not just skills) — reference for methodology. Use its workflow pattern.
+- Path: D:\agent-resources\repos\gsd-2\
+
+---
+
+## InkOS
+
+Autonomous novel writing AI agent with multi-agent pipeline and web workbench.
+
+### inkos
+- What: Autonomous fiction writing — multi-agent pipeline (Radar→Planner→Composer→Architect→Writer→Observer→Reflector→Normalizer→Auditor→Reviser), 33-dimension auditing, style imitation, fan fiction, AIGC detection, EPUB export, InkOS Studio web UI
+- When: Creative fiction writing, novel generation, short fiction packages, cover generation, chapter continuation/import, style analysis
+- Path: D:\agent-resources\skills\inkos
+
+---
+
 ## Quick Reference
 
 **For comprehensive harness**: ECC (232 skills + 60 agents at skills/ecc/)
+**For game development**: game-studios (73 skills) + godogen (autonomous gen) + GSD-2 (spec-driven)
 **For debugging**: systematic-debugging
 **For features**: test-driven-development or feature-dev (plugin)
 **For parallel work**: dispatching-parallel-agents
