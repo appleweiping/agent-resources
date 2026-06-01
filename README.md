@@ -87,15 +87,18 @@ Before changing repo visibility or publishing a release:
 ```powershell
 git status --short
 git ls-files
-rg -n --hidden -S "sk-|api[_-]?key|token|secret|password|BEGIN .*PRIVATE KEY" .
+powershell .\tools\Test-PublicSafety.ps1
+powershell .\tools\Test-HistorySafety.ps1
 ```
 
-Treat matches as findings until reviewed. Some skill names contain `sk-` substrings and are false positives; real credentials must be removed and rotated before publication.
+Treat matches as findings until reviewed. The history scan permits a small allowlist of known documentation placeholders such as `ghp_your_new_github_token`; real credentials must be removed from current files, cleaned from public history, and rotated before publication.
 
 ## Smoke Tests
 
 ```powershell
 powershell .\tools\Test-ImplicitSkillRouting.ps1
+powershell .\tools\Test-PublicSafety.ps1
+powershell .\tools\Test-HistorySafety.ps1
 ```
 
 This checks that `SKILL-INDEX.md` and committed `SKILL.md` frontmatter expose enough intent metadata for passive skill triggering.
