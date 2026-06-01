@@ -34,6 +34,14 @@ Do not show private filenames in public wiki pages. The user may inspect the loc
 
 ## Execution
 
+Optional non-moving preflight for a specific batch:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\vipin\workstation-maintenance\scripts\Invoke-ApprovedMoveBatch.ps1" -MovePlanPath "<move-plan.json>" -BatchId "<batch-id>" -PreflightOnly
+```
+
+Preflight writes a local `workstation-preflight-*.json` manifest and does not create destination directories or move files.
+
 Run:
 
 ```powershell

@@ -4,6 +4,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$BatchId,
     [switch]$Approved,
+    [switch]$PreflightOnly,
     [string]$OutputDir = ""
 )
 
@@ -22,8 +23,12 @@ function Test-PathUnder {
         $full.StartsWith($base + "\", [System.StringComparison]::OrdinalIgnoreCase)
 }
 
-if (-not $Approved) {
-    throw "Refusing to move files without -Approved. Ask the user to approve a batch ID first."
+if ($Approved -and $PreflightOnly) {
+    throw "Use either -Approved or -PreflightOnly, not both."
+}
+
+if (-not $Approved -and -not $PreflightOnly) {
+    throw "Refusing to move files without -Approved. Use -PreflightOnly for a non-moving batch check."
 }
 
 $planFull = Get-FullPathSafe $MovePlanPath
@@ -49,6 +54,7 @@ if ($items.Count -eq 0) {
     throw "Batch has no items: $BatchId"
 }
 
+$checked = [System.Collections.Generic.List[object]]::new()
 foreach ($item in $items) {
     if (-not $item.move_eligible) {
         throw "Item is not move eligible: $($item.id)"
@@ -75,6 +81,41 @@ foreach ($item in $items) {
     if (Test-Path -LiteralPath $item.proposed_destination) {
         throw "Destination already exists: $($item.proposed_destination)"
     }
+    $checked.Add([pscustomobject][ordered]@{
+        id = $item.id
+        source = $item.path
+        destination = $item.proposed_destination
+        rollback_source = $item.proposed_destination
+        rollback_destination = $item.path
+        size = $item.size
+        category = $item.category
+    })
+}
+
+$stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+if ($PreflightOnly) {
+    $preflightPath = Join-Path $out "workstation-preflight-$BatchId-$stamp.json"
+    $preflight = [ordered]@{
+        schema_version = "1.0"
+        checked_at = (Get-Date).ToString("o")
+        move_plan_path = $planFull
+        batch_id = $BatchId
+        target_root = $targetRoot
+        item_count = $checked.Count
+        status = "passed"
+        moves_executed = $false
+        items = $checked
+        approved_command = "powershell -NoProfile -ExecutionPolicy Bypass -File `"D:\agent-resources\skills\vipin\workstation-maintenance\scripts\Invoke-ApprovedMoveBatch.ps1`" -MovePlanPath `"$planFull`" -BatchId `"$BatchId`" -Approved"
+    }
+    $preflight | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $preflightPath -Encoding UTF8
+    [pscustomobject]@{
+        preflight_manifest = $preflightPath
+        batch_id = $BatchId
+        checked_count = $checked.Count
+        status = "passed"
+        moves_executed = $false
+    } | ConvertTo-Json -Depth 4
+    return
 }
 
 $moved = [System.Collections.Generic.List[object]]::new()
@@ -93,7 +134,6 @@ foreach ($item in $items) {
     })
 }
 
-$stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $appliedPath = Join-Path $out "workstation-applied-$BatchId-$stamp.json"
 $applied = [ordered]@{
     schema_version = "1.0"

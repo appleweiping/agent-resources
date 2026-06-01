@@ -54,6 +54,13 @@ try {
     }
     Assert-True $failedWithoutApproval "Move script ran without approval."
 
+    $preflightRaw = & $moveScript -MovePlanPath $planPath -BatchId $testBatchId -PreflightOnly
+    $preflightResult = $preflightRaw | ConvertFrom-Json
+    Assert-True ($preflightResult.status -eq "passed") "Preflight did not pass."
+    Assert-True (-not $preflightResult.moves_executed) "Preflight unexpectedly executed moves."
+    Assert-True (Test-Path -LiteralPath $preflightResult.preflight_manifest -PathType Leaf) "Preflight manifest was not created."
+    Assert-True (Test-Path -LiteralPath (Join-Path $downloads "paper.pdf") -PathType Leaf) "Preflight moved source file."
+
     $appliedRaw = & $moveScript -MovePlanPath $planPath -BatchId $testBatchId -Approved
     $appliedResult = $appliedRaw | ConvertFrom-Json
     Assert-True ($appliedResult.moved_count -ge 1) "Approved batch did not move items."

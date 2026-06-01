@@ -39,6 +39,8 @@ A physical move requires all of the following:
 5. A normal-use safety gate: live move plans default to candidates older than 30 days; recent files are deferred unless the user explicitly approves a lower age threshold.
 6. An applied manifest with rollback source and destination for every moved item.
 
+`Invoke-ApprovedMoveBatch.ps1 -PreflightOnly` may be run before approval because it performs checks and writes a preflight manifest without moving files.
+
 ## Delete Policy
 
 This skill never deletes user files. Cleanup can produce deletion candidates, but deletion requires a separate explicit approval flow.

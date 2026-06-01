@@ -68,4 +68,16 @@ Applied manifests record:
 - `items`
 - `rollback_command`
 
+Preflight manifests record:
+
+- `checked_at`
+- `move_plan_path`
+- `batch_id`
+- `target_root`
+- `item_count`
+- `status`
+- `moves_executed`: always `false`
+- `items`
+- `approved_command`
+
 Do not commit `.wiki-tmp/workstation-maintenance` manifests unless the user explicitly requests a local evidence archive. They can contain private filenames.
