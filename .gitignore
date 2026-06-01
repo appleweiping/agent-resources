@@ -16,3 +16,5 @@ tmp/
 *.sqlite-wal
 *.db
 *.log
+__pycache__/
+*.pyc

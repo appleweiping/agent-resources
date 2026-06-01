@@ -78,6 +78,7 @@ Examples:
 - Do not commit `repos/`, caches, browser profiles, generated runtime state, auth files, `.env`, or secrets.
 - Audit untracked additions before committing them.
 - Use `agentmemory` for live memory and cross-agent signals; use this repo for reusable skill assets and routing documentation.
+- Track provenance review notes for local skill additions, starting with [`docs/skill-provenance-audit-2026-06-01.md`](docs/skill-provenance-audit-2026-06-01.md).
 
 ## Public-Safety Checklist
 
@@ -90,6 +91,14 @@ rg -n --hidden -S "sk-|api[_-]?key|token|secret|password|BEGIN .*PRIVATE KEY" .
 ```
 
 Treat matches as findings until reviewed. Some skill names contain `sk-` substrings and are false positives; real credentials must be removed and rotated before publication.
+
+## Smoke Tests
+
+```powershell
+powershell .\tools\Test-ImplicitSkillRouting.ps1
+```
+
+This checks that `SKILL-INDEX.md` and committed `SKILL.md` frontmatter expose enough intent metadata for passive skill triggering.
 
 ## Related Projects
 
