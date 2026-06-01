@@ -16,6 +16,14 @@
 
 ## Approval
 
+Generate a local approval packet:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\vipin\workstation-maintenance\scripts\New-ApprovalPacket.ps1" -MovePlanPath "<move-plan.json>" -PreflightSummaryPath "<preflight-summary.json>"
+```
+
+The packet writes Markdown and JSON summaries with batch IDs, bucket-level counts, safety checks, and execution templates. It intentionally omits private filenames.
+
 Present only batch summaries:
 
 - batch ID
@@ -31,6 +39,8 @@ Present only batch summaries:
 - deferred recent item count
 
 Do not show private filenames in public wiki pages. The user may inspect the local JSON/Markdown manifest directly.
+
+If the user grants broad approval for the current low-risk plan, do not ask for per-batch confirmation. Rerun the full non-moving preflight and execute every passing batch, stopping immediately on the first failure.
 
 ## Execution
 
@@ -57,6 +67,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\v
 ```
 
 The script preflights all items before moving. It stops if any destination already exists, a source is missing, a source is under `D:\Research`, a source is a reparse point, a source is a directory, or a source belongs to a git worktree.
+
+For broad approval, repeat the approved command for each preflight-passing batch in the move plan and write a local applied summary with the per-batch applied manifest paths. Do not skip the post-move verification: moved destinations must exist, original sources should be absent, and applied paths must not include `D:\Research`.
 
 ## Rollback
 

@@ -41,9 +41,11 @@ This skill owns physical file organization. The `vipin-wiki` skill owns public-s
 
 4. Approval Gate
    - Stop before moving files.
+   - Run `scripts/New-ApprovalPacket.ps1` to create a public-safe local packet of batch IDs, counts, safety checks, and approval/execution commands.
    - Optionally run a non-moving preflight for the exact batch ID with `Invoke-ApprovedMoveBatch.ps1 -PreflightOnly`.
    - For a full approval readiness pass, run `scripts/Test-MovePlanBatches.ps1` to preflight every batch without moving files.
-   - Ask the user to approve one or more batch IDs.
+   - Ask the user to approve one or more batch IDs unless they have already granted broad approval for all currently passing low-risk batches.
+   - When broad approval exists, execute all currently passing low-risk batches without repeated trivial prompts.
    - Use `scripts/Invoke-ApprovedMoveBatch.ps1 -Approved` only after explicit approval.
 
 5. Rollback And Validation
@@ -88,6 +90,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\v
 Approved movement, only after the user names a batch ID:
 
 ```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\vipin\workstation-maintenance\scripts\New-ApprovalPacket.ps1" -MovePlanPath "<move-plan.json>" -PreflightSummaryPath "<preflight-summary.json>"
 powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\vipin\workstation-maintenance\scripts\Test-MovePlanBatches.ps1" -MovePlanPath "<move-plan.json>"
 powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\vipin\workstation-maintenance\scripts\Invoke-ApprovedMoveBatch.ps1" -MovePlanPath "<move-plan.json>" -BatchId "batch-downloads-archives-old" -PreflightOnly
 powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\vipin\workstation-maintenance\scripts\Invoke-ApprovedMoveBatch.ps1" -MovePlanPath "<move-plan.json>" -BatchId "batch-downloads-archives-old" -Approved

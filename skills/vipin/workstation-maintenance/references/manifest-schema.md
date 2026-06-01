@@ -91,4 +91,17 @@ Preflight summary manifests record:
 - `moves_executed`: should be `false`
 - `results`
 
+Approval packet summaries record:
+
+- `generated_at`
+- `move_plan_path`
+- `preflight_summary_path`
+- `approval_packet_path`
+- `batch_count`
+- `candidate_item_count`
+- `deferred_count`
+- `safety`
+- `preflight`
+- `batches`
+
 Do not commit `.wiki-tmp/workstation-maintenance` manifests unless the user explicitly requests a local evidence archive. They can contain private filenames.

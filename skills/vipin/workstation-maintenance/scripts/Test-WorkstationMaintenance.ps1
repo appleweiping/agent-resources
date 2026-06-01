@@ -6,6 +6,7 @@ $movePlanScript = Join-Path $skillRoot "scripts\New-MovePlan.ps1"
 $moveScript = Join-Path $skillRoot "scripts\Invoke-ApprovedMoveBatch.ps1"
 $rollbackScript = Join-Path $skillRoot "scripts\Invoke-RollbackBatch.ps1"
 $allPreflightScript = Join-Path $skillRoot "scripts\Test-MovePlanBatches.ps1"
+$approvalPacketScript = Join-Path $skillRoot "scripts\New-ApprovalPacket.ps1"
 
 function Assert-True {
     param([bool]$Condition, [string]$Message)
@@ -68,6 +69,13 @@ try {
     Assert-True ($allPreflightResult.batch_count -ge 1) "All-batch preflight did not check batches."
     Assert-True (-not $allPreflightResult.moves_executed) "All-batch preflight unexpectedly executed moves."
     Assert-True (Test-Path -LiteralPath $allPreflightResult.preflight_summary -PathType Leaf) "All-batch preflight summary was not created."
+
+    $packetRaw = & $approvalPacketScript -MovePlanPath $planPath -PreflightSummaryPath $allPreflightResult.preflight_summary
+    $packetResult = $packetRaw | ConvertFrom-Json
+    Assert-True (Test-Path -LiteralPath $packetResult.approval_packet -PathType Leaf) "Approval packet markdown was not created."
+    Assert-True (Test-Path -LiteralPath $packetResult.approval_summary -PathType Leaf) "Approval packet JSON summary was not created."
+    Assert-True ($packetResult.research_hits -eq 0) "Approval packet found Research hits."
+    Assert-True (-not $packetResult.moves_executed) "Approval packet unexpectedly executed moves."
 
     $appliedRaw = & $moveScript -MovePlanPath $planPath -BatchId $testBatchId -Approved
     $appliedResult = $appliedRaw | ConvertFrom-Json
