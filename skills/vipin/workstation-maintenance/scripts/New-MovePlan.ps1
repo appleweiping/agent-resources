@@ -3,7 +3,8 @@ param(
     [string]$ManifestPath,
     [string]$OutputDir = "",
     [string]$TargetRoot = "D:\_Organized",
-    [int]$MinimumAgeDays = 30
+    [int]$MinimumAgeDays = 30,
+    [int]$MaxItemsPerBatch = 100
 )
 
 $ErrorActionPreference = "Stop"
@@ -44,13 +45,24 @@ function Get-MoveSubcategory {
     $archiveExts = @(".zip", ".7z", ".rar", ".tar", ".gz", ".bz2", ".xz")
     $installerExts = @(".exe", ".msi", ".dmg", ".pkg", ".jar")
     $mediaExts = @(".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".mp3", ".wav", ".flac", ".mp4", ".mov", ".avi", ".mkv")
-    $documentExts = @(".pdf", ".md", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".csv", ".txt", ".html", ".htm", ".ipynb", ".nb")
+    $markdownExts = @(".md", ".markdown")
+    $officeDataExts = @(".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".csv", ".txt", ".html", ".htm")
+    $notebookExts = @(".ipynb", ".nb")
+    $codeExts = @(".c", ".h", ".m", ".py", ".js", ".ts", ".json", ".xml", ".yaml", ".yml", ".ini", ".toml")
 
     if ($archiveExts -contains $ext) { return "downloads-archives-old" }
     if ($installerExts -contains $ext) { return "downloads-installers-old" }
     if ($mediaExts -contains $ext) { return "downloads-media-old" }
-    if ($documentExts -contains $ext) { return "downloads-documents-old" }
+    if ($ext -eq ".pdf") { return "downloads-pdf-old" }
+    if ($markdownExts -contains $ext) { return "downloads-markdown-old" }
+    if ($officeDataExts -contains $ext) { return "downloads-office-data-old" }
+    if ($notebookExts -contains $ext) { return "downloads-notebooks-old" }
+    if ($codeExts -contains $ext) { return "downloads-code-old" }
     return "downloads-other-old"
+}
+
+if ($MaxItemsPerBatch -lt 1) {
+    throw "MaxItemsPerBatch must be at least 1."
 }
 
 $manifestFull = Get-FullPathSafe $ManifestPath
@@ -110,24 +122,37 @@ $batchCandidates | Group-Object { Get-MoveSubcategory $_ } | Sort-Object Name | 
             throw "Destination outside target root for $($item.id): $($item.proposed_destination)"
         }
     }
-    $batchId = "batch-" + (Get-SafeBatchName $subcategory)
-    $destRoots = @($batchItems | ForEach-Object { Split-Path -Parent $_.proposed_destination } | Sort-Object -Unique)
-    $totalSize = [long](($batchItems | Measure-Object -Property size -Sum).Sum)
-    $batches.Add([pscustomobject][ordered]@{
-        batch_id = $batchId
-        category = $category
-        subcategory = $subcategory
-        item_count = $batchItems.Count
-        total_size_bytes = $totalSize
-        total_size_human = (Format-ByteSize $totalSize)
-        risk_tier = "low"
-        minimum_age_days = $effectiveMinimumAgeDays
-        requires_user_approval = $true
-        destination_root = $TargetRoot
-        destination_dirs = $destRoots
-        item_ids = @($batchItems | ForEach-Object { $_.id })
-        items = $batchItems
-    })
+    $partCount = [Math]::Ceiling($batchItems.Count / [double]$MaxItemsPerBatch)
+    for ($start = 0; $start -lt $batchItems.Count; $start += $MaxItemsPerBatch) {
+        $end = [Math]::Min($start + $MaxItemsPerBatch - 1, $batchItems.Count - 1)
+        $chunkItems = @($batchItems[$start..$end])
+        $partIndex = [int]([Math]::Floor($start / [double]$MaxItemsPerBatch) + 1)
+        $partSuffix = ""
+        if ($partCount -gt 1) {
+            $partSuffix = "-part-{0:D3}" -f $partIndex
+        }
+        $batchId = "batch-" + (Get-SafeBatchName $subcategory) + $partSuffix
+        $destRoots = @($chunkItems | ForEach-Object { Split-Path -Parent $_.proposed_destination } | Sort-Object -Unique)
+        $totalSize = [long](($chunkItems | Measure-Object -Property size -Sum).Sum)
+        $batches.Add([pscustomobject][ordered]@{
+            batch_id = $batchId
+            category = $category
+            subcategory = $subcategory
+            part_index = $partIndex
+            part_count = [int]$partCount
+            item_count = $chunkItems.Count
+            total_size_bytes = $totalSize
+            total_size_human = (Format-ByteSize $totalSize)
+            risk_tier = "low"
+            minimum_age_days = $effectiveMinimumAgeDays
+            max_items_per_batch = $MaxItemsPerBatch
+            requires_user_approval = $true
+            destination_root = $TargetRoot
+            destination_dirs = $destRoots
+            item_ids = @($chunkItems | ForEach-Object { $_.id })
+            items = $chunkItems
+        })
+    }
 }
 
 $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
@@ -139,6 +164,7 @@ $plan = [ordered]@{
     manifest_path = $manifestFull
     target_root = $TargetRoot
     minimum_age_days = $effectiveMinimumAgeDays
+    max_items_per_batch = $MaxItemsPerBatch
     batch_count = $batches.Count
     item_count = $batchCandidates.Count
     deferred_count = $deferred.Count
@@ -160,12 +186,14 @@ $lines.Add("This plan is not approval. Execute a batch only after the user names
 $lines.Add("")
 $lines.Add("Minimum age for executable batches: $effectiveMinimumAgeDays days.")
 $lines.Add("")
+$lines.Add("Maximum items per executable batch: $MaxItemsPerBatch")
+$lines.Add("")
 $lines.Add("Deferred recent items: $($deferred.Count)")
 $lines.Add("")
-$lines.Add("| Batch ID | Category | Subcategory | Items | Size | Destination root |")
-$lines.Add("| --- | --- | --- | ---: | ---: | --- |")
+$lines.Add("| Batch ID | Category | Subcategory | Part | Items | Size | Destination root |")
+$lines.Add("| --- | --- | --- | ---: | ---: | ---: | --- |")
 foreach ($batch in $batches) {
-    $lines.Add("| `$($batch.batch_id)` | $($batch.category) | $($batch.subcategory) | $($batch.item_count) | $($batch.total_size_human) | `$($batch.destination_root)` |")
+    $lines.Add("| `$($batch.batch_id)` | $($batch.category) | $($batch.subcategory) | $($batch.part_index)/$($batch.part_count) | $($batch.item_count) | $($batch.total_size_human) | `$($batch.destination_root)` |")
 }
 $lines.Add("")
 $lines.Add("## Batch Details")
@@ -194,5 +222,6 @@ $lines | Set-Content -LiteralPath $mdPath -Encoding UTF8
     item_count = $batchCandidates.Count
     deferred_count = $deferred.Count
     minimum_age_days = $effectiveMinimumAgeDays
-    batches = @($batches | Select-Object batch_id, category, subcategory, item_count, total_size_human, risk_tier, minimum_age_days, destination_root)
+    max_items_per_batch = $MaxItemsPerBatch
+    batches = @($batches | Select-Object batch_id, category, subcategory, part_index, part_count, item_count, total_size_human, risk_tier, minimum_age_days, max_items_per_batch, destination_root)
 } | ConvertTo-Json -Depth 4

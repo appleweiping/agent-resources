@@ -6,6 +6,7 @@
 2. Generate move plan.
    - Default executable batches require candidates to be older than 30 days.
    - Recent candidates are recorded as deferred review items, not executable batches.
+   - Executable candidates are grouped by file type and split into parts of at most 100 items by default.
 3. Verify protected counts:
    - `D:\Research` entries: 0.
    - move-eligible reparse points: 0.
@@ -20,11 +21,13 @@ Present only batch summaries:
 - batch ID
 - category
 - subcategory
+- part number
 - item count
 - total size
 - destination root
 - risk tier
 - minimum age gate
+- maximum items per batch
 - deferred recent item count
 
 Do not show private filenames in public wiki pages. The user may inspect the local JSON/Markdown manifest directly.

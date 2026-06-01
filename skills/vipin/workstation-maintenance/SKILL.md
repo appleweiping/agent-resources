@@ -35,7 +35,8 @@ This skill owns physical file organization. The `vipin-wiki` skill owns public-s
 3. Plan
    - Run `scripts/New-MovePlan.ps1` against the inventory manifest.
    - By default, executable batches include only low-risk candidates older than 30 days; recent candidates are deferred for review so normal use is not disrupted.
-   - Review batch IDs, categories, subcategories, item counts, size, target root, age gate, and risk tier.
+   - Batches are grouped by file type and capped at 100 items by default so the user can approve narrow, understandable units.
+   - Review batch IDs, categories, subcategories, part numbers, item counts, size, target root, age gate, and risk tier.
    - Present only public-safe batch summaries in chat/wiki. Do not list sensitive filenames in public wiki pages.
 
 4. Approval Gate
@@ -80,7 +81,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\v
 powershell -NoProfile -ExecutionPolicy Bypass -File "D:\agent-resources\skills\vipin\workstation-maintenance\scripts\New-MovePlan.ps1" -ManifestPath "<manifest.json>"
 ```
 
-`New-MovePlan.ps1` defaults to `-MinimumAgeDays 30`. Lower it only when the user explicitly accepts the higher risk of moving recent files.
+`New-MovePlan.ps1` defaults to `-MinimumAgeDays 30 -MaxItemsPerBatch 100`. Lower the age gate only when the user explicitly accepts the higher risk of moving recent files.
 
 Approved movement, only after the user names a batch ID:
 
