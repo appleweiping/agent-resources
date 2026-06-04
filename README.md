@@ -19,7 +19,7 @@
 
 ## What This Is
 
-`agent-resources` is a D-drive-first library of reusable agent skills, workflow templates, references, and source mirrors.
+`AGENT_RESOURCE` is a D-drive-first library of reusable agent skills, workflow templates, references, and source mirrors. `D:\agent-resources` is a compatibility junction to this canonical root.
 
 Its job is simple: before an agent improvises a complex workflow, it should check this repository, find the right skill by task intent, read that skill's `SKILL.md`, and use the existing method.
 
@@ -52,7 +52,7 @@ Examples:
 
 | User asks for | Use |
 | --- | --- |
-| "organize my C/D drives", "clean up workstation", "organize D root folders", "keep devtools and wiki in sync" | `vipin/workstation-maintenance`, then `vipin-wiki` for public-safe wiki updates. Live file move plans defer recent files, cap batch sizes by default, generate approval packets, and can preflight every batch without moving files. D-root plans can move eligible root directories into `D:\_Organized` while preserving old paths as junctions. Broad approval can cover all currently passing low-risk batches. |
+| "organize my C/D drives", "clean up workstation", "organize D root folders", "keep devtools and wiki in sync" | `vipin/workstation-maintenance`, then `weiping-wiki` for public-safe wiki updates. Live file move plans defer recent files, cap batch sizes by default, generate approval packets, and can preflight every batch without moving files. D-root plans can move eligible root directories into `D:\_Organized` while preserving old paths as junctions. Protected roots include `D:\Research`, `D:\AGENT_RESOURCE`, `D:\agent-resources`, `D:\AGENTIC_SCIENCE`, `D:\devtools`, and public devtools exports. Broad approval can cover all currently passing low-risk batches. |
 | "review this paper", "citation check", "experiment audit" | Project ARIS skills first. |
 | README polish, repo presentation, public onboarding | README/documentation skills. |
 | Broken tests, flaky behavior, unfamiliar error | Systematic debugging skills. |
@@ -113,7 +113,7 @@ This checks that `SKILL-INDEX.md` and committed `SKILL.md` frontmatter expose en
 
 | Project | Role |
 | --- | --- |
-| [vipin-wiki](https://github.com/appleweiping/vipin-wiki) | Public knowledge base and canonical agent operating contract. |
+| [WEIPING_WIKI / vipin-wiki](https://github.com/appleweiping/vipin-wiki) | Public knowledge base, canonical agent operating contract, and compatibility home for historical `vipinknowledge` links. |
 | [devtools-public](https://github.com/appleweiping/devtools-public) | Clean public export of local Windows agent launchers and health checks. |
 | [agentmemory](https://github.com/rohitg00/agentmemory) | Upstream memory and MCP collaboration substrate. |
 

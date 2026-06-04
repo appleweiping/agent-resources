@@ -1,12 +1,12 @@
 name: workstation-maintenance
 version: 1.1.0
-description: Safe local drive inventory, approved file moves, D-drive root move-with-junction organization, rollback, and agent infrastructure sync.
+description: Safe local drive inventory, approved file moves, D-drive root move-with-junction organization, rollback, and protected agent infrastructure sync.
 default_prompt: |
   Use this skill for C/D/G drive organization and workstation maintenance.
   Generate inventory, file move plans, or D-root organization plans first;
-  protect D:\Research and agent infrastructure; preflight before movement;
+  protect D:\Research plus AGENT_RESOURCE, AGENTIC_SCIENCE, devtools, devtools-public, and other agent infrastructure; preflight before movement;
   preserve old D-root paths with junctions when directory roots are moved;
-  and update vipinknowledge only with public-safe summaries.
+  and update WEIPING_WIKI only with public-safe summaries.
 handoff:
   primary_skill: workstation-maintenance
-  wiki_partner_skill: vipin-wiki
+  wiki_partner_skill: weiping-wiki

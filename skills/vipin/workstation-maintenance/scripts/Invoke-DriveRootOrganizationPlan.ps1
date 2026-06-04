@@ -9,7 +9,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$HardProtectedRootNames = @("Research", "agent-resources", "devtools", "devtools-public", "_Organized")
+$HardProtectedRootNames = @("Research", "AGENT_RESOURCE", "agent-resources", "AGENTIC_SCIENCE", "devtools", "devtools-public", "DELVTOOLS_PUBLIC", "_Organized")
 
 function Get-FullPathSafe {
     param([string]$Path)

@@ -94,10 +94,16 @@ try {
     $driveDownloads = Join-Path $driveRoot "360Downloads"
     $driveResearch = Join-Path $driveRoot "Research"
     $driveDevtools = Join-Path $driveRoot "devtools"
-    New-Item -ItemType Directory -Force -Path $driveRoot, $driveDownloads, $driveResearch, $driveDevtools | Out-Null
+    $driveAgentResource = Join-Path $driveRoot "AGENT_RESOURCE"
+    $driveAgenticScience = Join-Path $driveRoot "AGENTIC_SCIENCE"
+    $driveDevtoolsPublic = Join-Path $driveRoot "DELVTOOLS_PUBLIC"
+    New-Item -ItemType Directory -Force -Path $driveRoot, $driveDownloads, $driveResearch, $driveDevtools, $driveAgentResource, $driveAgenticScience, $driveDevtoolsPublic | Out-Null
     Set-Content -LiteralPath (Join-Path $driveDownloads "download.txt") -Value "download"
     Set-Content -LiteralPath (Join-Path $driveResearch "research.txt") -Value "research"
     Set-Content -LiteralPath (Join-Path $driveDevtools "tool.txt") -Value "tool"
+    Set-Content -LiteralPath (Join-Path $driveAgentResource "skills.txt") -Value "skills"
+    Set-Content -LiteralPath (Join-Path $driveAgenticScience "uupf.txt") -Value "uupf"
+    Set-Content -LiteralPath (Join-Path $driveDevtoolsPublic "public.txt") -Value "public"
 
     $drivePlanRaw = & $driveRootPlanScript -DriveRoot $driveRoot -TargetRoot $driveTarget -OutputDir $out
     $drivePlanResult = $drivePlanRaw | ConvertFrom-Json
@@ -108,6 +114,9 @@ try {
     $drivePlan = Get-Content -LiteralPath $drivePlanPath -Raw | ConvertFrom-Json
     Assert-True (@($drivePlan.items | Where-Object { $_.name -eq "Research" -and $_.action -eq "record-only" }).Count -eq 1) "Drive-root plan did not protect Research."
     Assert-True (@($drivePlan.items | Where-Object { $_.name -eq "devtools" -and $_.action -eq "record-only" }).Count -eq 1) "Drive-root plan did not protect devtools."
+    Assert-True (@($drivePlan.items | Where-Object { $_.name -eq "AGENT_RESOURCE" -and $_.action -eq "record-only" }).Count -eq 1) "Drive-root plan did not protect AGENT_RESOURCE."
+    Assert-True (@($drivePlan.items | Where-Object { $_.name -eq "AGENTIC_SCIENCE" -and $_.action -eq "record-only" }).Count -eq 1) "Drive-root plan did not protect AGENTIC_SCIENCE."
+    Assert-True (@($drivePlan.items | Where-Object { $_.name -eq "DELVTOOLS_PUBLIC" -and $_.action -eq "record-only" }).Count -eq 1) "Drive-root plan did not protect DELVTOOLS_PUBLIC."
 
     $driveFailedWithoutApproval = $false
     try {
@@ -153,6 +162,23 @@ try {
         $protectedRejected = $true
     }
     Assert-True $protectedRejected "Drive-root preflight accepted a tampered protected root plan."
+
+    $tamperedAgentResource = Get-Content -LiteralPath $drivePlanPath -Raw | ConvertFrom-Json
+    $agentMoveItem = @($tamperedAgentResource.items | Where-Object { $_.action -eq "move-with-junction" } | Select-Object -First 1)[0]
+    $agentMoveItem.id = "dr_bad_agent_resource"
+    $agentMoveItem.name = "AGENT_RESOURCE"
+    $agentMoveItem.source_path = $driveAgentResource
+    $agentMoveItem.target_path = Join-Path $driveTarget "Tools-Review\_RootDirs\AGENT_RESOURCE"
+    $agentMoveItem.junction_path = $driveAgentResource
+    $tamperedAgentPath = Join-Path $out "tampered-agent-resource-root-plan.json"
+    $tamperedAgentResource | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $tamperedAgentPath -Encoding UTF8
+    $agentProtectedRejected = $false
+    try {
+        & $driveRootInvokeScript -PlanPath $tamperedAgentPath -PreflightOnly
+    } catch {
+        $agentProtectedRejected = $true
+    }
+    Assert-True $agentProtectedRejected "Drive-root preflight accepted a tampered AGENT_RESOURCE root plan."
 
     $partialRoot = Join-Path $root "partial-drive-root"
     $partialTarget = Join-Path $partialRoot "_Organized"

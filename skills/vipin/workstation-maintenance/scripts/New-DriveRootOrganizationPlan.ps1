@@ -2,11 +2,11 @@ param(
     [string]$DriveRoot = "D:\",
     [string]$OutputDir = "",
     [string]$TargetRoot = "D:\_Organized",
-    [string[]]$ExcludeNames = @("Research", "agent-resources", "devtools", "devtools-public", "_Organized")
+    [string[]]$ExcludeNames = @("Research", "AGENT_RESOURCE", "agent-resources", "AGENTIC_SCIENCE", "devtools", "devtools-public", "DELVTOOLS_PUBLIC", "_Organized")
 )
 
 $ErrorActionPreference = "Stop"
-$HardProtectedRootNames = @("Research", "agent-resources", "devtools", "devtools-public", "_Organized")
+$HardProtectedRootNames = @("Research", "AGENT_RESOURCE", "agent-resources", "AGENTIC_SCIENCE", "devtools", "devtools-public", "DELVTOOLS_PUBLIC", "_Organized")
 
 function Get-FullPathSafe {
     param([string]$Path)
@@ -79,7 +79,7 @@ function Get-RootClassification {
         $lower -match '^(pagefile\.sys|dumpstack\.log\.tmp)$') {
         return @("Protected-NoMove", "protected", "system/vendor runtime root")
     }
-    if ($lower -in @('.claude', 'devtools', 'devtools-public', 'agent-resources') -or
+    if ($lower -in @('.claude', 'devtools', 'devtools-public', 'delvtools_public', 'agent_resource', 'agent-resources', 'agentic_science') -or
         $lower -match '^\.pnpm-store$') {
         return @("AgentInfrastructure", "high", "agent/tool infrastructure")
     }

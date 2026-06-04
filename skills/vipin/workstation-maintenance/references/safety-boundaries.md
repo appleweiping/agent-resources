@@ -13,8 +13,11 @@
 These roots are important routing records. Keep them in place unless the user approves a dedicated project-specific migration:
 
 - `D:\devtools`
+- `D:\AGENT_RESOURCE`
 - `D:\agent-resources`
+- `D:\AGENTIC_SCIENCE`
 - `D:\devtools-public`
+- `D:\DELVTOOLS_PUBLIC`
 - `D:\Company`
 - `D:\Project`
 - `D:\Healthcare`
@@ -48,7 +51,7 @@ Directory-level root organization is a separate workflow from file-level cleanup
 - Use `New-DriveRootOrganizationPlan.ps1` to classify immediate `D:\` children only.
 - Move eligible root directories under `D:\_Organized\<Bucket>\_RootDirs\`.
 - Leave a junction at the original root path so existing absolute paths keep working.
-- Do not recurse into or move `D:\Research`, `D:\agent-resources`, `D:\devtools`, `D:\devtools-public`, or `D:\_Organized`.
+- Do not recurse into or move `D:\Research`, `D:\AGENT_RESOURCE`, `D:\agent-resources`, `D:\AGENTIC_SCIENCE`, `D:\devtools`, `D:\devtools-public`, `D:\DELVTOOLS_PUBLIC`, or `D:\_Organized`.
 - Treat active roots such as `D:\Company`, `D:\Project`, `D:\Healthcare`, `D:\Game_develop`, `D:\frontend`, and `D:\WeipingYan_portfolio` as record-only unless the user explicitly requests a project-specific migration.
 - Run `Invoke-DriveRootOrganizationPlan.ps1 -PreflightOnly` before approved execution.
 - If Windows denies a root because of ACLs or active process locks, pass its manifest ID through `-SkipIds`, record it as a classified exception, and retry only after the lock is resolved.

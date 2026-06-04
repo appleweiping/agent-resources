@@ -122,7 +122,7 @@ function Get-Classification {
     if ($lower -match '\\(cache|caches|node_modules|\.venv|venv|site-packages|logs?|sessions?|profiles?|cookies|databases?|auth)(\\|$)') {
         return @("Protected-NoMove", "protected", "runtime/cache/auth/session path")
     }
-    if ($lower -match '^d:\\(devtools|agent-resources|devtools-public)(\\|$)' -or
+    if ($lower -match '^d:\\(devtools|devtools-public|delvtools_public|agent_resource|agent-resources|agentic_science)(\\|$)' -or
         $lower -match '^c:\\users\\admin\\\.(codex|claude|openhands)(\\|$)' -or
         $lower -match '^c:\\users\\admin\\\.config\\opencode(\\|$)' -or
         $lower -match '^c:\\users\\admin\\\.cache\\opencode(\\|$)' -or

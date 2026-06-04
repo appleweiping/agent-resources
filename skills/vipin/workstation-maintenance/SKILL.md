@@ -1,21 +1,21 @@
 ---
 name: workstation-maintenance
-description: Safely inventory and organize local C/D/G drives, protect research roots, perform file-level approved moves or D-drive root move-with-junction organization, and coordinate devtools, agent-resources, and vipinknowledge maintenance through manifests and rollback.
+description: Safely inventory and organize local C/D/G drives, protect research and agentic infrastructure roots, perform file-level approved moves or D-drive root move-with-junction organization, and coordinate devtools, AGENT_RESOURCE/agent-resources, AGENTIC_SCIENCE/UUPF, and WEIPING_WIKI maintenance through manifests and rollback.
 license: MIT
 ---
 
 # Workstation Maintenance
 
-Use this skill for whole-computer maintenance: C/D/G drive inventory, safe file organization, D-drive root directory organization with compatibility junctions, agent infrastructure routing, and coordinated updates between `D:\devtools`, `D:\agent-resources`, and `D:\Research\vipin's knowledgebase`.
+Use this skill for whole-computer maintenance: C/D/G drive inventory, safe file organization, D-drive root directory organization with compatibility junctions, agent infrastructure routing, and coordinated updates between `D:\devtools`, `D:\AGENT_RESOURCE` / `D:\agent-resources`, `D:\AGENTIC_SCIENCE`, and `D:\Research\WEIPING_WIKI` / `D:\Research\vipin's knowledgebase`.
 
-This skill owns physical file organization. The `vipin-wiki` skill owns public-safe wiki updates after a dry run or an approved move changes state.
+This skill owns physical file organization. The `weiping-wiki` skill owns public-safe wiki updates after a dry run or an approved move changes state; `vipin-wiki` is only a historical alias.
 
 ## Hard Boundaries
 
 - Never move, delete, recurse into, or depend on contents under `D:\Research`.
 - Treat any resolved path under `D:\Research` as protected even if reached through a junction, symlink, relative path, or different casing.
 - C: is in scope for inventory and classification, but Windows, Program Files, ProgramData, AppData, package caches, browser profiles, auth/session/db/log directories, active repos, and reparse points are no-move by default.
-- D: is in scope except `D:\Research`; important roots such as `D:\devtools`, `D:\agent-resources`, `D:\devtools-public`, `D:\Company`, `D:\Project`, `D:\Healthcare`, `D:\Game_develop`, `D:\frontend`, and `D:\WeipingYan_portfolio` are routing records by default, not move targets.
+- D: is in scope except `D:\Research`; important roots such as `D:\devtools`, `D:\devtools-public`, `D:\DELVTOOLS_PUBLIC`, `D:\AGENT_RESOURCE`, `D:\agent-resources`, `D:\AGENTIC_SCIENCE`, `D:\Company`, `D:\Project`, `D:\Healthcare`, `D:\Game_develop`, `D:\frontend`, and `D:\WeipingYan_portfolio` are routing records by default, not move targets.
 - Do not delete files. Deletion can only be a later candidate list with explicit user approval.
 - Do not read sensitive file contents for classification; use path and filename patterns only.
 - Do not execute a physical move without a manifest, a move plan, an explicit batch ID from the user, and rollback metadata.
@@ -23,13 +23,13 @@ This skill owns physical file organization. The `vipin-wiki` skill owns public-s
 ## Workflow
 
 1. Preflight
-   - Check git status for `vipinknowledge`, `agent-resources`, `devtools`, and `devtools-public`.
-   - Run `D:\devtools\health-check.ps1`, `agentmemory status`, and `python scripts/wiki.py maintain --scope whole-computer --json` from `vipinknowledge`.
+   - Check git status for `WEIPING_WIKI`, `AGENT_RESOURCE` / `agent-resources`, `AGENTIC_SCIENCE`, `devtools`, and `devtools-public`.
+   - Run `D:\devtools\health-check.ps1`, `agentmemory status`, and `python scripts/wiki.py maintain --scope whole-computer --json` from `WEIPING_WIKI`.
    - Record unrelated dirty files and leave them untouched.
 
 2. Inventory
    - Run `scripts/New-WorkstationInventory.ps1`.
-   - Store generated JSON/Markdown under ignored `.wiki-tmp/workstation-maintenance/` when working from `vipinknowledge`.
+   - Store generated JSON/Markdown under ignored `.wiki-tmp/workstation-maintenance/` when working from `WEIPING_WIKI`.
    - Confirm there are zero entries under `D:\Research` and zero move-eligible reparse points, directories, or git worktrees.
 
 3. Plan
@@ -58,13 +58,17 @@ This skill owns physical file organization. The `vipin-wiki` skill owns public-s
    - Run `scripts/Test-WorkstationMaintenance.ps1` after script changes.
 
 6. Wiki Sync
-   - After dry-run inventory or approved movement, update `vipinknowledge` through `vipin-wiki`.
+   - After dry-run inventory or approved movement, update `WEIPING_WIKI` through `weiping-wiki`.
    - Public wiki pages should record roots, buckets, policy, counts, and safety boundaries, not private document details.
 
 7. Agent Infrastructure Sync
-   - Keep shared skill source in `D:\agent-resources\skills\vipin\workstation-maintenance`.
+   - Keep shared skill source in `D:\AGENT_RESOURCE\skills\vipin\workstation-maintenance`; `D:\agent-resources` is a compatibility junction.
    - Expose to Codex and Claude/OpenCode through junctions or symlinks under `D:\devtools`.
-   - Update `D:\agent-resources\SKILL-INDEX.md`, `D:\agent-resources\README.md`, `D:\devtools\README.md`, and `vipinknowledge` agent docs together.
+   - Update `D:\AGENT_RESOURCE\SKILL-INDEX.md`, `D:\AGENT_RESOURCE\README.md`, `D:\devtools\README.md`, and `WEIPING_WIKI` agent docs together.
+
+8. UUPF-Aided Skill Review
+   - For major revisions to this skill, run UUPF from `D:\AGENTIC_SCIENCE\uupf\UniversalUpgradeForge.zip` in offline mode against this skill directory and write reports under ignored `.wiki-tmp\uupf-runs\`.
+   - Treat UUPF reports as audit input only. Hand-apply accepted changes, keep raw reports out of public commits unless curated, and run this skill's tests before committing.
 
 ## Categories
 
