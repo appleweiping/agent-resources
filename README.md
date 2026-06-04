@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="banner.png" alt="agent-resources" width="100%">
+  <img src="banner.png" alt="AGENT_RESOURCE" width="100%">
 </p>
 
-<h1 align="center">agent-resources</h1>
+<h1 align="center">AGENT_RESOURCE</h1>
 
 <p align="center">
   <strong>Curated skills, workflows, references, and routing guidance for agentic development.</strong>
