@@ -152,6 +152,17 @@ Anthropic-specific tools and integrations.
 - When: Creating generative art or algorithmic visualizations
 - Path: D:\agent-resources\skills\anthropics\algorithmic-art
 
+## shadcn/ui (official)
+
+Official shadcn/ui skill + full source mirror. shadcn is a code-distribution platform: components are added as editable source into the project via the `shadcn@latest` CLI (not a runtime dependency). MIT licensed. Full upstream repo mirrored at `D:\agent-resources\repos\shadcn-ui` (apps, packages, templates, registry, evals).
+
+### shadcn
+- What: Add / search / compose / fix / theme shadcn/ui components and presets; injects live project context (`components.json`, installed components, aliases, tailwind version) and enforces composition + styling rules (semantic tokens, Field/FieldGroup forms, data-icon, gap over space-y).
+- When: Any project with a `components.json`; building or upgrading React/Next/Vite UIs; "shadcn init", "add <component>", "apply --preset", theming, or component debugging. Auto-triggers by task intent, not only when named.
+- Use: run all CLI via the project's package runner (`npx`/`pnpm dlx`/`bunx --bun` shadcn@latest). Read SKILL.md `rules/*.md` (styling, forms, composition, icons, base-vs-radix) before writing component markup.
+- Path: D:\agent-resources\skills\shadcn  (→ repos\shadcn-ui\skills\shadcn)
+- Repo: D:\agent-resources\repos\shadcn-ui
+
 ## Context-Engineering-Kit
 
 Systematic approaches to context, documentation, and development practices.
