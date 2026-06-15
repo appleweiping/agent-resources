@@ -26,11 +26,11 @@ When changing workstation maintenance behavior, update the relevant files in the
 - `D:\AGENT_RESOURCE\README.md`
 - `D:\AGENT_RESOURCE\SKILL-INDEX.md`
 - `D:\devtools\README.md`
-- `D:\Research\WEIPING_WIKI\AGENTS.md`
-- `D:\Research\WEIPING_WIKI\README.md`
-- `D:\Research\WEIPING_WIKI\CLAUDE.md`
-- `D:\Research\WEIPING_WIKI\.opencode\OPENCODE.md`
-- `D:\Research\WEIPING_WIKI\.claude\skills\README-skills-layout.md`
+- `D:\AGENTIC_SCIENCE\WEIPING_WIKI\AGENTS.md`
+- `D:\AGENTIC_SCIENCE\WEIPING_WIKI\README.md`
+- `D:\AGENTIC_SCIENCE\WEIPING_WIKI\CLAUDE.md`
+- `D:\AGENTIC_SCIENCE\WEIPING_WIKI\.opencode\OPENCODE.md`
+- `D:\AGENTIC_SCIENCE\WEIPING_WIKI\.claude\skills\README-skills-layout.md`
 - `weiping-wiki` / compatibility `vipin-wiki` skill files
 - relevant `wiki/` pages, `wiki/index.md`, `wiki/log.md`, and `wiki/catalog.json`
 
